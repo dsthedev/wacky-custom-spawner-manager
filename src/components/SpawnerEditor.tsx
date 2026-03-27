@@ -108,13 +108,14 @@ export function SpawnerEditor({ spawner, onSave, onCancel, creatures = [], piece
     const sliderValue = range
       ? [Math.min(range.max, Math.max(range.min, currentValue))]
       : [currentValue];
+    const fieldStr = String(field);
 
     return (
       <div>
-        <FieldLabel htmlFor={field} label={label} fieldKey={field} onSetDefault={handleSetDefault} />
+        <FieldLabel htmlFor={fieldStr} label={label} fieldKey={fieldStr} onSetDefault={handleSetDefault} />
         <Input
-          id={field}
-          name={field}
+          id={fieldStr}
+          name={fieldStr}
           type="number"
           value={currentValue}
           onChange={handleChange}
