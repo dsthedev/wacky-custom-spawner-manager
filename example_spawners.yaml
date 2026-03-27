@@ -1,0 +1,39 @@
+spawners:
+  - name: BigNecks
+    prefabToCopy: wood_wall_half
+    m_spawnTimer: 2
+    m_onGroundOnly: false
+    m_maxTotal: 10
+    m_maxNear: 10
+    m_farRadius: 20
+    m_spawnRadius: 6
+    m_setPatrolSpawnPoint: true
+    m_triggerDistance: 10
+    m_spawnIntervalSec: 2
+    m_levelupChance: 100
+    m_prefabName: Neck
+    m_nearRadius: 1
+    minLevel: 2
+    maxLevel: 2
+    HitPoints: 600
+    mobTarget: false
+    multiSpawn: 0
+  - name: SmallSpawns
+    prefabToCopy: stone_floor_2x2
+    m_spawnTimer: 1
+    m_onGroundOnly: true
+    m_maxTotal: 5
+    m_maxNear: 3
+    m_farRadius: 15
+    m_spawnRadius: 4
+    m_setPatrolSpawnPoint: false
+    m_triggerDistance: 8
+    m_spawnIntervalSec: 1.5
+    m_levelupChance: 50
+    m_prefabName: Goblin
+    m_nearRadius: 1
+    minLevel: 1
+    maxLevel: 3
+    HitPoints: 50
+    mobTarget: true
+    multiSpawn: 2
