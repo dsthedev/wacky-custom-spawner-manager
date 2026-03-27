@@ -1,19 +1,26 @@
 # Wacky Custom Spawner Manager
 
-A little web tool for managing custom spawner configurations. Upload YAML files, edit spawner profiles, and export your configurations with an intuitive interface.
+An experimental visual editor for managing custom WackySpawner config files. Upload YAML, inspect and edit spawn definitions, manage local profiles, and export the result back to YAML without hand-editing every field.
 
-## ✨ Features
+Hosted app: https://wackyspawnereditor.netlify.app/
+
+This project is built to support configuration workflows for WackyMole's WackySpawners mod:
+https://thunderstore.io/c/valheim/p/WackyMole/WackySpawners/
+
+## Features
 
 - **YAML File Upload**: Upload and parse YAML spawner configuration files
 - **Spawner Editor**: Edit all spawner properties with a comprehensive form
 - **Prefab Search**: Search and select prefabs from a curated list (100+ items)
 - **Profile Management**: Save, load, and manage multiple spawner profiles in localStorage
 - **Search & Filter**: Quickly find spawners by name, prefab name, or prefab to copy
+- **Visual Management**: Inspect grouped spawner details in a more readable UI before editing raw values
 - **Export**: Download your spawner configurations as YAML files
+- **Clipboard Copy**: Copy the current profile YAML directly to your clipboard
 - **Dark Mode**: Built-in dark mode support (toggle with `d` key)
 - **Responsive Design**: Works seamlessly on desktop and mobile devices
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Installation
 
@@ -29,6 +36,8 @@ pnpm run dev
 
 The app will be available at `http://localhost:5173/`
 
+Hosted version: https://wackyspawnereditor.netlify.app/
+
 ### Build
 
 ```bash
@@ -41,7 +50,7 @@ pnpm run build
 pnpm run lint
 ```
 
-## 📋 Project Structure
+## Project Structure
 
 ```
 src/
@@ -64,16 +73,16 @@ src/
 └── main.tsx            # Application entry point
 ```
 
-## 🎯 Usage
+## Usage
 
 1. **Upload a YAML file**: Click "Choose YAML File" to upload your spawner configuration
 2. **Create new spawners**: Click "Add Spawner" in the spawner list
 3. **Edit spawners**: Click the edit button on any spawner to modify its properties
 4. **Search prefabs**: Both prefab fields have searchable comboboxes with 100+ prefab options
 5. **Manage profiles**: Use the sidebar to create, load, or delete spawner profiles
-6. **Export**: Click the download button to export your current spawners as a YAML file
+6. **Copy or export**: Copy the current YAML to your clipboard or download it as a file
 
-## 📝 YAML Format & Spawner Fields
+## YAML Format & Spawner Fields
 
 Supported spawner object structure with all available fields:
 
@@ -107,7 +116,7 @@ https://gist.githubusercontent.com/dsthedev/2beea417f614975d68fd2c2ded3c6baf/raw
 
 This provides a comprehensive list of available prefabs that can be used in both `prefabToCopy` and `m_prefabName` fields.
 
-## 🛠️ Technologies
+## Technologies
 
 - **React 19**: UI framework
 - **TypeScript**: Type safety
@@ -117,6 +126,11 @@ This provides a comprehensive list of available prefabs that can be used in both
 - **js-yaml**: YAML parsing
 - **Lucide React**: Icons
 
-## 📄 License
+## Credits
+
+- WackyMole for WackySpawners: https://thunderstore.io/c/valheim/p/WackyMole/WackySpawners/
+- Project repo: https://github.com/dsthedev/wacky-custom-spawner-manager
+
+## License
 
 MIT

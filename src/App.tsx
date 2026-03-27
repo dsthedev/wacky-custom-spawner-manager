@@ -1,16 +1,24 @@
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { FileUpload } from '@/components/FileUpload';
-import { SpawnerList } from '@/components/SpawnerList';
-import { SpawnerEditor } from '@/components/SpawnerEditor';
-import { ProfileManager } from '@/components/ProfileManager';
-import { useSpawnerProfile } from '@/hooks/useSpawnerProfile';
-import { usePrefabData } from '@/hooks/usePrefabData';
-import { exportSpawnersAsYAML, spawnersToYAML } from '@/utils/yaml';
-import { generateWackySpawners } from '@/utils/wackyData';
-import type { SpawnerObject } from '@/types/spawner';
-import { Check, Copy, Download, Sprout } from 'lucide-react';
+import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { FileUpload } from "@/components/FileUpload"
+import { SpawnerList } from "@/components/SpawnerList"
+import { SpawnerEditor } from "@/components/SpawnerEditor"
+import { ProfileManager } from "@/components/ProfileManager"
+import { useSpawnerProfile } from "@/hooks/useSpawnerProfile"
+import { usePrefabData } from "@/hooks/usePrefabData"
+import { exportSpawnersAsYAML, spawnersToYAML } from "@/utils/yaml"
+import { generateWackySpawners } from "@/utils/wackyData"
+import type { SpawnerObject } from "@/types/spawner"
+import {
+  Check,
+  Copy,
+  Download,
+  Heart,
+  Plus,
+  Sprout,
+  TerminalIcon,
+} from "lucide-react"
 
 export function App() {
   const {
@@ -21,131 +29,160 @@ export function App() {
     createProfile,
     updateProfile,
     removeProfile,
-  } = useSpawnerProfile();
+  } = useSpawnerProfile()
 
-  const { creatures, pieces, imageMap } = usePrefabData();
+  const { creatures, pieces, imageMap } = usePrefabData()
 
-  const [spawners, setSpawners] = useState<SpawnerObject[]>(currentProfile?.spawners || []);
+  const [spawners, setSpawners] = useState<SpawnerObject[]>(
+    currentProfile?.spawners || []
+  )
   const [editingSpawner, setEditingSpawner] = useState<{
-    spawner: SpawnerObject;
-    index: number;
-  } | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [profileName, setProfileName] = useState(currentProfile?.name || '');
-  const [copySucceeded, setCopySucceeded] = useState(false);
+    spawner: SpawnerObject
+    index: number
+  } | null>(null)
+  const [isEditing, setIsEditing] = useState(false)
+  const [profileName, setProfileName] = useState(currentProfile?.name || "")
+  const [copySucceeded, setCopySucceeded] = useState(false)
 
   useEffect(() => {
-    setSpawners(currentProfile?.spawners || []);
-    setProfileName(currentProfile?.name || '');
-  }, [currentProfile]);
+    setSpawners(currentProfile?.spawners || [])
+    setProfileName(currentProfile?.name || "")
+  }, [currentProfile])
 
-  const handleFileUpload = (uploadedSpawners: SpawnerObject[], filename: string) => {
-    const name = filename.replace(/\.[^/.]+$/, '');
-    const profile = createProfile(name, uploadedSpawners);
-    setSpawners(profile.spawners);
-  };
+  const handleFileUpload = (
+    uploadedSpawners: SpawnerObject[],
+    filename: string
+  ) => {
+    const name = filename.replace(/\.[^/.]+$/, "")
+    const profile = createProfile(name, uploadedSpawners)
+    setSpawners(profile.spawners)
+  }
 
   const handleAddSpawner = () => {
     setEditingSpawner({
-      spawner: { name: '', entity: '', weight: 1 },
+      spawner: { name: "", entity: "", weight: 1 },
       index: spawners.length,
-    });
-    setIsEditing(true);
-  };
+    })
+    setIsEditing(true)
+  }
 
   const handleEditSpawner = (spawner: SpawnerObject, index: number) => {
-    setEditingSpawner({ spawner, index });
-    setIsEditing(true);
-  };
+    setEditingSpawner({ spawner, index })
+    setIsEditing(true)
+  }
 
   const handleSaveSpawner = (spawner: SpawnerObject) => {
     if (editingSpawner) {
-      const newSpawners = [...spawners];
+      const newSpawners = [...spawners]
       if (editingSpawner.index >= newSpawners.length) {
-        newSpawners.push(spawner);
+        newSpawners.push(spawner)
       } else {
-        newSpawners[editingSpawner.index] = spawner;
+        newSpawners[editingSpawner.index] = spawner
       }
-      setSpawners(newSpawners);
+      setSpawners(newSpawners)
       if (currentProfile) {
-        updateProfile(newSpawners);
+        updateProfile(newSpawners)
       }
     }
-    setEditingSpawner(null);
-    setIsEditing(false);
-  };
+    setEditingSpawner(null)
+    setIsEditing(false)
+  }
 
   const handleDeleteSpawner = (index: number) => {
-    const newSpawners = spawners.filter((_, i) => i !== index);
-    setSpawners(newSpawners);
+    const newSpawners = spawners.filter((_, i) => i !== index)
+    setSpawners(newSpawners)
     if (currentProfile) {
-      updateProfile(newSpawners);
+      updateProfile(newSpawners)
     }
-  };
+  }
 
   const handleNewProfile = () => {
-    setCurrentProfile(null);
-    setSpawners([]);
-    setProfileName('');
-  };
+    setCurrentProfile(null)
+    setSpawners([])
+    setProfileName("")
+  }
 
   const handleLoadWackyData = () => {
     try {
-      const generatedSpawners = generateWackySpawners(creatures, pieces);
-      const generatedName = `Wacky Data ${new Date().toLocaleDateString()} (${generatedSpawners.length})`;
-      const profile = createProfile(generatedName, generatedSpawners, 'Auto-generated randomized spawner profile');
-      setSpawners(profile.spawners);
-      setProfileName(profile.name);
+      const generatedSpawners = generateWackySpawners(creatures, pieces)
+      const generatedName = `Wacky Data ${new Date().toLocaleDateString()} (${generatedSpawners.length})`
+      const profile = createProfile(
+        generatedName,
+        generatedSpawners,
+        "Auto-generated randomized spawner profile"
+      )
+      setSpawners(profile.spawners)
+      setProfileName(profile.name)
     } catch (error) {
-      alert(error instanceof Error ? error.message : 'Failed to generate wacky data');
+      alert(
+        error instanceof Error ? error.message : "Failed to generate wacky data"
+      )
     }
-  };
+  }
 
   const handleSaveAsProfile = () => {
     if (!profileName.trim()) {
-      alert('Please enter a profile name');
-      return;
+      alert("Please enter a profile name")
+      return
     }
 
     if (currentProfile) {
-      updateProfile(spawners, profileName);
+      updateProfile(spawners, profileName)
     } else {
-      createProfile(profileName, spawners);
+      createProfile(profileName, spawners)
     }
-    setProfileName('');
-  };
+    setProfileName("")
+  }
 
   const handleExport = () => {
     if (spawners.length === 0) {
-      alert('No spawners to export');
-      return;
+      alert("No spawners to export")
+      return
     }
-    const filename = currentProfile ? `${currentProfile.name}.yaml` : 'spawners.yaml';
-    exportSpawnersAsYAML(spawners, filename);
-  };
+    const filename = currentProfile
+      ? `${currentProfile.name}.yaml`
+      : "spawners.yaml"
+    exportSpawnersAsYAML(spawners, filename)
+  }
 
   const handleCopyProfile = async () => {
     if (spawners.length === 0) {
-      alert('No spawners to copy');
-      return;
+      alert("No spawners to copy")
+      return
     }
 
     try {
-      await navigator.clipboard.writeText(spawnersToYAML(spawners));
-      setCopySucceeded(true);
-      window.setTimeout(() => setCopySucceeded(false), 2000);
+      await navigator.clipboard.writeText(spawnersToYAML(spawners))
+      setCopySucceeded(true)
+      window.setTimeout(() => setCopySucceeded(false), 2000)
     } catch (error) {
-      alert(error instanceof Error ? error.message : 'Failed to copy profile');
+      alert(error instanceof Error ? error.message : "Failed to copy profile")
     }
-  };
+  }
 
   return (
-    <div className="min-h-screen p-6">
-      <div className="mx-auto max-w-6xl">
+    <div className="flex min-h-screen flex-col p-6">
+      <div className="mx-auto w-full max-w-6xl flex-1">
         <div className="mb-8">
-          <h1 className="flex items-center text-4xl font-bold"><Sprout size={68} /> Spawner Manager</h1>
-          <p className="mt-2 text-muted-foreground">
-            Upload, edit, and manage WackySpawner <code>yml</code> configurations
+          <h1 className="flex items-center gap-3 text-4xl font-bold">
+            <Sprout size={68} /> Spawner Manager
+          </h1>
+          <p className="mt-2 max-w-3xl text-muted-foreground">
+            A visual editor for creating and maintaining custom WackySpawner
+            configuration files.
+          </p>
+          <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+            This tool helps you upload, review, edit, and export WackySpawner
+            YAML configurations. It is based on{" "}
+            <a
+              href="https://thunderstore.io/c/valheim/p/WackyMole/WackySpawners/"
+              target="_blank"
+              rel="noreferrer"
+              className="font-medium text-foreground underline underline-offset-4"
+            >
+              WackyMole's WackySpawners
+            </a>
+            .
           </p>
         </div>
 
@@ -172,13 +209,26 @@ export function App() {
                 />
                 <div className="flex gap-2">
                   <Button onClick={handleSaveAsProfile} size="sm">
-                    {currentProfile ? 'Update' : 'Save'}
+                    {currentProfile ? "Update" : "Save"}
                   </Button>
-                  <Button onClick={handleCopyProfile} variant="outline" size="sm">
-                    {copySucceeded ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    {copySucceeded ? 'Copied' : 'Copy'}
+                  <Button
+                    onClick={handleCopyProfile}
+                    variant="outline"
+                    size="sm"
+                  >
+                    {copySucceeded ? (
+                      <Check className="h-4 w-4" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                    {copySucceeded ? "Copied" : "Copy"}
                   </Button>
-                  <Button onClick={handleExport} className="flex-1" variant="amber" size="sm">
+                  <Button
+                    onClick={handleExport}
+                    className="flex-1"
+                    variant="amber"
+                    size="sm"
+                  >
                     <Download className="h-4 w-4" />
                     Download
                   </Button>
@@ -213,16 +263,30 @@ export function App() {
           spawner={editingSpawner.spawner}
           onSave={handleSaveSpawner}
           onCancel={() => {
-            setIsEditing(false);
-            setEditingSpawner(null);
+            setIsEditing(false)
+            setEditingSpawner(null)
           }}
           creatures={creatures}
           pieces={pieces}
           imageMap={imageMap}
         />
       )}
+
+      <div className="flex items-center justify-center gap-2 pt-6 text-center text-xs text-muted-foreground">
+        <Heart size={20} strokeWidth={1.625} className="text-red-500" />
+        <Plus size={16} strokeWidth={1.625} />
+        <a
+          href="https://github.com/dsthedev/wacky-custom-spawner-manager"
+          target="_blank"
+          rel="noreferrer"
+          className="underline underline-offset-4"
+        >
+          <TerminalIcon size={24} strokeWidth={1.625} className="text-slate-500" />
+          <span className="sr-only">made by d11z</span>
+        </a>
+      </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
