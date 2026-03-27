@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Trash2, Plus } from 'lucide-react';
+import { Dices, Trash2, Plus } from 'lucide-react';
 import type { SpawnerProfile } from '@/types/spawner';
 
 interface ProfileManagerProps {
@@ -10,6 +10,7 @@ interface ProfileManagerProps {
   onLoadProfile: (id: string) => void;
   onDeleteProfile: (id: string) => void;
   onNewProfile: () => void;
+  onLoadWackyData: () => void;
 }
 
 export function ProfileManager({
@@ -18,6 +19,7 @@ export function ProfileManager({
   onLoadProfile,
   onDeleteProfile,
   onNewProfile,
+  onLoadWackyData,
 }: ProfileManagerProps) {
   return (
     <Card>
@@ -72,6 +74,17 @@ export function ProfileManager({
               </div>
             ))
           )}
+        </div>
+        <div className="mt-4 flex flex-col justify-center border-t border-slate-200 pt-4 dark:border-slate-800">
+          
+          <Button
+            onClick={onLoadWackyData}
+            size="lg"
+            className="bg-purple-600 text-white hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-400"
+          ><Dices size={24} />
+            Make a Wacky Profile!
+          </Button>
+          <p className="mt-2 text-xs text-center text-muted-foreground">Generates a mostly random set of spawners.</p>
         </div>
       </CardContent>
     </Card>

@@ -1,41 +1,53 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { ChevronDown, Plus, Trash2, Edit2 } from 'lucide-react';
-import type { SpawnerObject } from '@/types/spawner';
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { ChevronDown, Plus, Trash2, Edit2 } from "lucide-react"
+import type { SpawnerObject } from "@/types/spawner"
 
 interface SpawnerListProps {
-  spawners: SpawnerObject[];
-  onEdit: (spawner: SpawnerObject, index: number) => void;
-  onDelete: (index: number) => void;
-  onAdd: () => void;
-  imageMap?: Map<string, string>;
+  spawners: SpawnerObject[]
+  onEdit: (spawner: SpawnerObject, index: number) => void
+  onDelete: (index: number) => void
+  onAdd: () => void
+  imageMap?: Map<string, string>
 }
 
-export function SpawnerList({ spawners, onEdit, onDelete, onAdd, imageMap }: SpawnerListProps) {
-  const [expandedIndices, setExpandedIndices] = useState<Set<number>>(new Set());
-  const [searchTerm, setSearchTerm] = useState('');
+export function SpawnerList({
+  spawners,
+  onEdit,
+  onDelete,
+  onAdd,
+  imageMap,
+}: SpawnerListProps) {
+  const [expandedIndices, setExpandedIndices] = useState<Set<number>>(new Set())
+  const [searchTerm, setSearchTerm] = useState("")
 
   const toggleExpanded = (index: number) => {
-    const newExpanded = new Set(expandedIndices);
+    const newExpanded = new Set(expandedIndices)
     if (newExpanded.has(index)) {
-      newExpanded.delete(index);
+      newExpanded.delete(index)
     } else {
-      newExpanded.add(index);
+      newExpanded.add(index)
     }
-    setExpandedIndices(newExpanded);
-  };
+    setExpandedIndices(newExpanded)
+  }
 
-  const filteredSpawners = spawners.filter(spawner => {
-    const searchLower = searchTerm.toLowerCase();
+  const filteredSpawners = spawners.filter((spawner) => {
+    const searchLower = searchTerm.toLowerCase()
     return (
       spawner.name?.toLowerCase().includes(searchLower) ||
       spawner.m_prefabName?.toLowerCase().includes(searchLower) ||
       spawner.prefabToCopy?.toLowerCase().includes(searchLower)
-    );
-  });
+    )
+  })
 
   return (
     <Card>
@@ -43,7 +55,9 @@ export function SpawnerList({ spawners, onEdit, onDelete, onAdd, imageMap }: Spa
         <div className="flex items-center justify-between">
           <div>
             <CardTitle>Spawners ({filteredSpawners.length})</CardTitle>
-            <CardDescription>View and manage spawner definitions</CardDescription>
+            <CardDescription>
+              View and manage spawner definitions
+            </CardDescription>
           </div>
           <Button onClick={onAdd} size="sm">
             <Plus className="mr-2 h-4 w-4" />
@@ -64,8 +78,8 @@ export function SpawnerList({ spawners, onEdit, onDelete, onAdd, imageMap }: Spa
             <p className="text-sm text-muted-foreground">No spawners found</p>
           ) : (
             filteredSpawners.map((spawner, index) => {
-              const actualIndex = spawners.indexOf(spawner);
-              const isExpanded = expandedIndices.has(actualIndex);
+              const actualIndex = spawners.indexOf(spawner)
+              const isExpanded = expandedIndices.has(actualIndex)
 
               return (
                 <div
@@ -80,29 +94,29 @@ export function SpawnerList({ spawners, onEdit, onDelete, onAdd, imageMap }: Spa
                       <div className="flex items-center gap-3">
                         <ChevronDown
                           className={`h-4 w-4 transition-transform ${
-                            isExpanded ? 'rotate-180' : ''
+                            isExpanded ? "rotate-180" : ""
                           }`}
                         />
-                        <div>
-                          <div className="flex items-center gap-2">
-                            {spawner.m_prefabName && imageMap && (
+                        {spawner.m_prefabName && imageMap && (
                               <div className="flex gap-1">
                                 {spawner.m_prefabName
-                                  .split(',')
-                                  .map(p => p.trim())
+                                  .split(",")
+                                  .map((p) => p.trim())
                                   .filter(Boolean)
-                                  .map(p => imageMap.get(p))
+                                  .map((p) => imageMap.get(p))
                                   .filter((url): url is string => !!url)
                                   .map((url, i) => (
                                     <img
                                       key={i}
                                       src={url}
                                       alt=""
-                                      className="h-10 w-10 rounded object-contain"
+                                      className="h-18 w-18 rounded object-contain"
                                     />
                                   ))}
                               </div>
                             )}
+                        <div>
+                          <div className="flex items-center gap-2">
                             <p className="font-semibold">{spawner.name}</p>
                           </div>
                           <div className="flex gap-2 pt-1">
@@ -116,35 +130,39 @@ export function SpawnerList({ spawners, onEdit, onDelete, onAdd, imageMap }: Spa
                                 Max: {spawner.m_maxTotal}
                               </Badge>
                             )}
-                            {spawner.minLevel !== undefined && spawner.maxLevel !== undefined && (
-                              <Badge variant="outline" className="text-xs">
-                                Lvl {spawner.minLevel}-{spawner.maxLevel}
-                              </Badge>
-                            )}
+                            {spawner.minLevel !== undefined &&
+                              spawner.maxLevel !== undefined && (
+                                <Badge variant="outline" className="text-xs">
+                                  Lvl {spawner.minLevel}-{spawner.maxLevel}
+                                </Badge>
+                              )}
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 items-center">
                       <Button
-                        variant="ghost"
-                        size="sm"
+                        variant="outline"
+                        size={"xl"}
+                        className="text-xl"
                         onClick={(e) => {
-                          e.stopPropagation();
-                          onEdit(spawner, actualIndex);
+                          e.stopPropagation()
+                          onEdit(spawner, actualIndex)
                         }}
                       >
-                        <Edit2 className="h-4 w-4" />
+                        <Edit2 className="text-slate-500" />
+                        Edit
                       </Button>
                       <Button
                         variant="ghost"
-                        size="sm"
+                        size={"sm"}
+                        className="text-xl"
                         onClick={(e) => {
-                          e.stopPropagation();
-                          onDelete(actualIndex);
+                          e.stopPropagation()
+                          onDelete(actualIndex)
                         }}
                       >
-                        <Trash2 className="h-4 w-4 text-red-500" />
+                        <Trash2 className="text-red-500" />
                       </Button>
                     </div>
                   </div>
@@ -157,11 +175,11 @@ export function SpawnerList({ spawners, onEdit, onDelete, onAdd, imageMap }: Spa
                     </div>
                   )}
                 </div>
-              );
+              )
             })
           )}
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }

@@ -1,6 +1,6 @@
 # Wacky Custom Spawner Manager
 
-A modern web application for managing custom spawner configurations. Upload YAML files, edit spawner profiles, and export your configurations with an intuitive interface.
+A little web tool for managing custom spawner configurations. Upload YAML files, edit spawner profiles, and export your configurations with an intuitive interface.
 
 ## ✨ Features
 

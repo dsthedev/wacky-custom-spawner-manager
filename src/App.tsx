@@ -8,8 +8,9 @@ import { ProfileManager } from '@/components/ProfileManager';
 import { useSpawnerProfile } from '@/hooks/useSpawnerProfile';
 import { usePrefabData } from '@/hooks/usePrefabData';
 import { exportSpawnersAsYAML } from '@/utils/yaml';
+import { generateWackySpawners } from '@/utils/wackyData';
 import type { SpawnerObject } from '@/types/spawner';
-import { Download } from 'lucide-react';
+import { Download, Sprout } from 'lucide-react';
 
 export function App() {
   const {
@@ -87,6 +88,18 @@ export function App() {
     setProfileName('');
   };
 
+  const handleLoadWackyData = () => {
+    try {
+      const generatedSpawners = generateWackySpawners(creatures, pieces);
+      const generatedName = `Wacky Data ${new Date().toLocaleDateString()} (${generatedSpawners.length})`;
+      const profile = createProfile(generatedName, generatedSpawners, 'Auto-generated randomized spawner profile');
+      setSpawners(profile.spawners);
+      setProfileName(profile.name);
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Failed to generate wacky data');
+    }
+  };
+
   const handleSaveAsProfile = () => {
     if (!profileName.trim()) {
       alert('Please enter a profile name');
@@ -114,9 +127,9 @@ export function App() {
     <div className="min-h-screen p-6">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold">Spawner Manager</h1>
+          <h1 className="flex items-center text-4xl font-bold"><Sprout size={68} /> Spawner Manager</h1>
           <p className="mt-2 text-muted-foreground">
-            Upload, edit, and manage spawner configurations
+            Upload, edit, and manage WackySpawner <code>yml</code> configurations
           </p>
         </div>
 
@@ -130,6 +143,7 @@ export function App() {
               onLoadProfile={loadProfile}
               onDeleteProfile={removeProfile}
               onNewProfile={handleNewProfile}
+              onLoadWackyData={handleLoadWackyData}
             />
 
             {(currentProfile || spawners.length > 0) && (
@@ -141,11 +155,12 @@ export function App() {
                   onChange={(e) => setProfileName(e.target.value)}
                 />
                 <div className="flex gap-2">
-                  <Button onClick={handleSaveAsProfile} className="flex-1" size="sm">
-                    {currentProfile ? 'Update' : 'Save'} Profile
+                  <Button onClick={handleSaveAsProfile} size="sm">
+                    {currentProfile ? 'Update' : 'Save'}
                   </Button>
-                  <Button onClick={handleExport} variant="outline" size="sm">
+                  <Button onClick={handleExport} className="flex-1" variant="amber" size="sm">
                     <Download className="h-4 w-4" />
+                    Download
                   </Button>
                 </div>
               </div>
