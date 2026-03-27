@@ -2,10 +2,31 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Slider } from '@/components/ui/slider';
 import { Combobox } from '@/components/Combobox';
 import { FieldLabel } from '@/components/FieldLabel';
 import type { SpawnerObject } from '@/types/spawner';
 import { X } from 'lucide-react';
+
+type SuggestedRange = {
+  min: number;
+  max: number;
+};
+
+const SUGGESTED_RANGES: Partial<Record<keyof SpawnerObject, SuggestedRange>> = {
+  m_spawnTimer: { min: 2, max: 600 },
+  m_maxTotal: { min: 1, max: 20 },
+  m_maxNear: { min: 1, max: 20 },
+  m_farRadius: { min: 5, max: 50 },
+  m_spawnRadius: { min: 1, max: 40 },
+  m_triggerDistance: { min: 5, max: 40 },
+  m_spawnIntervalSec: { min: 3, max: 601 },
+  m_levelupChance: { min: 0, max: 100 },
+  m_nearRadius: { min: 1, max: 10 },
+  minLevel: { min: 1, max: 25 },
+  maxLevel: { min: 1, max: 25 },
+  HitPoints: { min: 100, max: 9999 },
+};
 
 interface SpawnerEditorProps {
   spawner?: SpawnerObject;
@@ -74,6 +95,47 @@ export function SpawnerEditor({ spawner, onSave, onCancel, creatures = [], piece
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleSliderChange = (field: keyof SpawnerObject) => (value: number[]) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value[0],
+    }));
+  };
+
+  const renderNumberInput = (field: keyof SpawnerObject, label: string) => {
+    const range = SUGGESTED_RANGES[field];
+    const currentValue = Number(formData[field] ?? 0);
+    const sliderValue = range
+      ? [Math.min(range.max, Math.max(range.min, currentValue))]
+      : [currentValue];
+
+    return (
+      <div>
+        <FieldLabel htmlFor={field} label={label} fieldKey={field} onSetDefault={handleSetDefault} />
+        <Input
+          id={field}
+          name={field}
+          type="number"
+          value={currentValue}
+          onChange={handleChange}
+          className="mt-1"
+        />
+        {range && (
+          <div className="mt-2 space-y-1">
+            <Slider
+              min={range.min}
+              max={range.max}
+              step={1}
+              value={sliderValue}
+              onValueChange={handleSliderChange(field)}
+            />
+            <p className="text-xs text-muted-foreground">Suggested range: {range.min} - {range.max}</p>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <Card className="fixed inset-4 z-50 flex flex-col overflow-auto md:inset-auto md:right-4 md:top-4 md:h-[90vh] md:w-[600px]">
       <CardHeader className="flex flex-row items-center justify-between space-y-0">
@@ -134,16 +196,13 @@ export function SpawnerEditor({ spawner, onSave, onCancel, creatures = [], piece
               />
             </div>
             <div>
-              <FieldLabel htmlFor="minLevel" label="Min Level" fieldKey="minLevel" onSetDefault={handleSetDefault} />
-              <Input id="minLevel" name="minLevel" type="number" value={formData.minLevel || 0} onChange={handleChange} className="mt-1" />
+              {renderNumberInput('minLevel', 'Min Level')}
             </div>
             <div>
-              <FieldLabel htmlFor="maxLevel" label="Max Level" fieldKey="maxLevel" onSetDefault={handleSetDefault} />
-              <Input id="maxLevel" name="maxLevel" type="number" value={formData.maxLevel || 0} onChange={handleChange} className="mt-1" />
+              {renderNumberInput('maxLevel', 'Max Level')}
             </div>
             <div>
-              <FieldLabel htmlFor="m_levelupChance" label="Levelup Chance" fieldKey="m_levelupChance" onSetDefault={handleSetDefault} />
-              <Input id="m_levelupChance" name="m_levelupChance" type="number" value={formData.m_levelupChance || 0} onChange={handleChange} className="mt-1" />
+              {renderNumberInput('m_levelupChance', 'Levelup Chance')}
             </div>
           </div>
         </section>
@@ -155,12 +214,10 @@ export function SpawnerEditor({ spawner, onSave, onCancel, creatures = [], piece
           </h4>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <FieldLabel htmlFor="m_spawnTimer" label="Spawn Timer" fieldKey="m_spawnTimer" onSetDefault={handleSetDefault} />
-              <Input id="m_spawnTimer" name="m_spawnTimer" type="number" value={formData.m_spawnTimer || 0} onChange={handleChange} className="mt-1" />
+              {renderNumberInput('m_spawnTimer', 'Spawn Timer')}
             </div>
             <div>
-              <FieldLabel htmlFor="m_spawnIntervalSec" label="Spawn Interval (sec)" fieldKey="m_spawnIntervalSec" onSetDefault={handleSetDefault} />
-              <Input id="m_spawnIntervalSec" name="m_spawnIntervalSec" type="number" value={formData.m_spawnIntervalSec || 0} onChange={handleChange} className="mt-1" />
+              {renderNumberInput('m_spawnIntervalSec', 'Spawn Interval (sec)')}
             </div>
             <div>
               <FieldLabel htmlFor="multiSpawn" label="Multi Spawn" fieldKey="multiSpawn" onSetDefault={handleSetDefault} />
@@ -176,20 +233,16 @@ export function SpawnerEditor({ spawner, onSave, onCancel, creatures = [], piece
           </h4>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <FieldLabel htmlFor="m_triggerDistance" label="Trigger Distance" fieldKey="m_triggerDistance" onSetDefault={handleSetDefault} />
-              <Input id="m_triggerDistance" name="m_triggerDistance" type="number" value={formData.m_triggerDistance || 0} onChange={handleChange} className="mt-1" />
+              {renderNumberInput('m_triggerDistance', 'Trigger Distance')}
             </div>
             <div>
-              <FieldLabel htmlFor="m_spawnRadius" label="Spawn Radius" fieldKey="m_spawnRadius" onSetDefault={handleSetDefault} />
-              <Input id="m_spawnRadius" name="m_spawnRadius" type="number" value={formData.m_spawnRadius || 0} onChange={handleChange} className="mt-1" />
+              {renderNumberInput('m_spawnRadius', 'Spawn Radius')}
             </div>
             <div>
-              <FieldLabel htmlFor="m_nearRadius" label="Near Radius" fieldKey="m_nearRadius" onSetDefault={handleSetDefault} />
-              <Input id="m_nearRadius" name="m_nearRadius" type="number" value={formData.m_nearRadius || 0} onChange={handleChange} className="mt-1" />
+              {renderNumberInput('m_nearRadius', 'Near Radius')}
             </div>
             <div>
-              <FieldLabel htmlFor="m_farRadius" label="Far Radius" fieldKey="m_farRadius" onSetDefault={handleSetDefault} />
-              <Input id="m_farRadius" name="m_farRadius" type="number" value={formData.m_farRadius || 0} onChange={handleChange} className="mt-1" />
+              {renderNumberInput('m_farRadius', 'Far Radius')}
             </div>
           </div>
         </section>
@@ -201,12 +254,10 @@ export function SpawnerEditor({ spawner, onSave, onCancel, creatures = [], piece
           </h4>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <FieldLabel htmlFor="m_maxNear" label="Max Near" fieldKey="m_maxNear" onSetDefault={handleSetDefault} />
-              <Input id="m_maxNear" name="m_maxNear" type="number" value={formData.m_maxNear || 0} onChange={handleChange} className="mt-1" />
+              {renderNumberInput('m_maxNear', 'Max Near')}
             </div>
             <div>
-              <FieldLabel htmlFor="m_maxTotal" label="Max Total" fieldKey="m_maxTotal" onSetDefault={handleSetDefault} />
-              <Input id="m_maxTotal" name="m_maxTotal" type="number" value={formData.m_maxTotal || 0} onChange={handleChange} className="mt-1" />
+              {renderNumberInput('m_maxTotal', 'Max Total')}
             </div>
           </div>
         </section>
@@ -235,8 +286,7 @@ export function SpawnerEditor({ spawner, onSave, onCancel, creatures = [], piece
           </h4>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <FieldLabel htmlFor="HitPoints" label="Hit Points" fieldKey="HitPoints" onSetDefault={handleSetDefault} />
-              <Input id="HitPoints" name="HitPoints" type="number" value={formData.HitPoints || 0} onChange={handleChange} className="mt-1" />
+              {renderNumberInput('HitPoints', 'Hit Points')}
             </div>
             <div className="flex items-center gap-2 pt-5">
               <input id="mobTarget" name="mobTarget" type="checkbox" checked={formData.mobTarget || false} onChange={handleChange} className="h-4 w-4 rounded border-slate-300" />

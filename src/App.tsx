@@ -111,7 +111,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6 dark:bg-slate-950">
+    <div className="min-h-screen p-6">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8">
           <h1 className="text-4xl font-bold">Spawner Manager</h1>
