@@ -7,10 +7,10 @@ import { SpawnerEditor } from '@/components/SpawnerEditor';
 import { ProfileManager } from '@/components/ProfileManager';
 import { useSpawnerProfile } from '@/hooks/useSpawnerProfile';
 import { usePrefabData } from '@/hooks/usePrefabData';
-import { exportSpawnersAsYAML } from '@/utils/yaml';
+import { exportSpawnersAsYAML, spawnersToYAML } from '@/utils/yaml';
 import { generateWackySpawners } from '@/utils/wackyData';
 import type { SpawnerObject } from '@/types/spawner';
-import { Download, Sprout } from 'lucide-react';
+import { Check, Copy, Download, Sprout } from 'lucide-react';
 
 export function App() {
   const {
@@ -32,6 +32,7 @@ export function App() {
   } | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [profileName, setProfileName] = useState(currentProfile?.name || '');
+  const [copySucceeded, setCopySucceeded] = useState(false);
 
   useEffect(() => {
     setSpawners(currentProfile?.spawners || []);
@@ -123,6 +124,21 @@ export function App() {
     exportSpawnersAsYAML(spawners, filename);
   };
 
+  const handleCopyProfile = async () => {
+    if (spawners.length === 0) {
+      alert('No spawners to copy');
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(spawnersToYAML(spawners));
+      setCopySucceeded(true);
+      window.setTimeout(() => setCopySucceeded(false), 2000);
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Failed to copy profile');
+    }
+  };
+
   return (
     <div className="min-h-screen p-6">
       <div className="mx-auto max-w-6xl">
@@ -157,6 +173,10 @@ export function App() {
                 <div className="flex gap-2">
                   <Button onClick={handleSaveAsProfile} size="sm">
                     {currentProfile ? 'Update' : 'Save'}
+                  </Button>
+                  <Button onClick={handleCopyProfile} variant="outline" size="sm">
+                    {copySucceeded ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    {copySucceeded ? 'Copied' : 'Copy'}
                   </Button>
                   <Button onClick={handleExport} className="flex-1" variant="amber" size="sm">
                     <Download className="h-4 w-4" />
