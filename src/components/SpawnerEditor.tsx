@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Combobox } from '@/components/Combobox';
+import { FieldLabel } from '@/components/FieldLabel';
 import type { SpawnerObject } from '@/types/spawner';
-import { getPrefabs } from '@/utils/prefabs';
+import { getCreatures, getPieces } from '@/utils/prefabs';
 import { X } from 'lucide-react';
 
 interface SpawnerEditorProps {
@@ -39,12 +39,8 @@ export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps)
     }
   );
 
-  const [prefabs, setPrefabs] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    getPrefabs().then(setPrefabs).then(() => setLoading(false));
-  }, []);
+  const pieces = getPieces();
+  const creatures = getCreatures();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
@@ -73,6 +69,10 @@ export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps)
     }));
   };
 
+  const handleSetDefault = (field: string, value: string | number | boolean) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
   return (
     <Card className="fixed inset-4 z-50 flex flex-col overflow-auto md:inset-auto md:right-4 md:top-4 md:h-[90vh] md:w-[600px]">
       <CardHeader className="flex flex-row items-center justify-between space-y-0">
@@ -88,7 +88,7 @@ export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps)
         <div className="grid grid-cols-2 gap-4">
           {/* Basic Info */}
           <div className="col-span-2">
-            <Label htmlFor="name">Name *</Label>
+            <FieldLabel htmlFor="name" label="Name *" fieldKey="name" onSetDefault={handleSetDefault} />
             <Input
               id="name"
               name="name"
@@ -100,30 +100,28 @@ export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps)
           </div>
 
           <div className="col-span-2">
-            <Label htmlFor="prefabToCopy">Prefab to Copy</Label>
+            <FieldLabel htmlFor="prefabToCopy" label="Prefab to Copy" fieldKey="prefabToCopy" onSetDefault={handleSetDefault} />
             <Combobox
-              options={prefabs}
+              options={pieces}
               value={formData.prefabToCopy || ''}
               onChange={handlePrefabChange('prefabToCopy')}
-              placeholder="Select or search prefab..."
-              loading={loading}
+              placeholder="Select or search piece..."
             />
           </div>
 
           <div className="col-span-2">
-            <Label htmlFor="m_prefabName">Prefab Name</Label>
+            <FieldLabel htmlFor="m_prefabName" label="Prefab Name" fieldKey="m_prefabName" onSetDefault={handleSetDefault} />
             <Combobox
-              options={prefabs}
+              options={creatures}
               value={formData.m_prefabName || ''}
               onChange={handlePrefabChange('m_prefabName')}
-              placeholder="Select or search prefab..."
-              loading={loading}
+              placeholder="Select or search creature..."
             />
           </div>
 
           {/* Spawn Settings */}
           <div>
-            <Label htmlFor="m_spawnTimer">Spawn Timer</Label>
+            <FieldLabel htmlFor="m_spawnTimer" label="Spawn Timer" fieldKey="m_spawnTimer" onSetDefault={handleSetDefault} />
             <Input
               id="m_spawnTimer"
               name="m_spawnTimer"
@@ -135,7 +133,7 @@ export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps)
           </div>
 
           <div>
-            <Label htmlFor="m_spawnIntervalSec">Spawn Interval (sec)</Label>
+            <FieldLabel htmlFor="m_spawnIntervalSec" label="Spawn Interval (sec)" fieldKey="m_spawnIntervalSec" onSetDefault={handleSetDefault} />
             <Input
               id="m_spawnIntervalSec"
               name="m_spawnIntervalSec"
@@ -147,7 +145,7 @@ export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps)
           </div>
 
           <div>
-            <Label htmlFor="m_spawnRadius">Spawn Radius</Label>
+            <FieldLabel htmlFor="m_spawnRadius" label="Spawn Radius" fieldKey="m_spawnRadius" onSetDefault={handleSetDefault} />
             <Input
               id="m_spawnRadius"
               name="m_spawnRadius"
@@ -159,7 +157,7 @@ export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps)
           </div>
 
           <div>
-            <Label htmlFor="m_triggerDistance">Trigger Distance</Label>
+            <FieldLabel htmlFor="m_triggerDistance" label="Trigger Distance" fieldKey="m_triggerDistance" onSetDefault={handleSetDefault} />
             <Input
               id="m_triggerDistance"
               name="m_triggerDistance"
@@ -172,7 +170,7 @@ export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps)
 
           {/* Radius Settings */}
           <div>
-            <Label htmlFor="m_nearRadius">Near Radius</Label>
+            <FieldLabel htmlFor="m_nearRadius" label="Near Radius" fieldKey="m_nearRadius" onSetDefault={handleSetDefault} />
             <Input
               id="m_nearRadius"
               name="m_nearRadius"
@@ -184,7 +182,7 @@ export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps)
           </div>
 
           <div>
-            <Label htmlFor="m_maxNear">Max Near</Label>
+            <FieldLabel htmlFor="m_maxNear" label="Max Near" fieldKey="m_maxNear" onSetDefault={handleSetDefault} />
             <Input
               id="m_maxNear"
               name="m_maxNear"
@@ -196,7 +194,7 @@ export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps)
           </div>
 
           <div>
-            <Label htmlFor="m_farRadius">Far Radius</Label>
+            <FieldLabel htmlFor="m_farRadius" label="Far Radius" fieldKey="m_farRadius" onSetDefault={handleSetDefault} />
             <Input
               id="m_farRadius"
               name="m_farRadius"
@@ -208,7 +206,7 @@ export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps)
           </div>
 
           <div>
-            <Label htmlFor="m_maxTotal">Max Total</Label>
+            <FieldLabel htmlFor="m_maxTotal" label="Max Total" fieldKey="m_maxTotal" onSetDefault={handleSetDefault} />
             <Input
               id="m_maxTotal"
               name="m_maxTotal"
@@ -221,7 +219,7 @@ export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps)
 
           {/* Creature Settings */}
           <div>
-            <Label htmlFor="minLevel">Min Level</Label>
+            <FieldLabel htmlFor="minLevel" label="Min Level" fieldKey="minLevel" onSetDefault={handleSetDefault} />
             <Input
               id="minLevel"
               name="minLevel"
@@ -233,7 +231,7 @@ export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps)
           </div>
 
           <div>
-            <Label htmlFor="maxLevel">Max Level</Label>
+            <FieldLabel htmlFor="maxLevel" label="Max Level" fieldKey="maxLevel" onSetDefault={handleSetDefault} />
             <Input
               id="maxLevel"
               name="maxLevel"
@@ -245,7 +243,7 @@ export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps)
           </div>
 
           <div>
-            <Label htmlFor="HitPoints">Hit Points</Label>
+            <FieldLabel htmlFor="HitPoints" label="Hit Points" fieldKey="HitPoints" onSetDefault={handleSetDefault} />
             <Input
               id="HitPoints"
               name="HitPoints"
@@ -257,7 +255,7 @@ export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps)
           </div>
 
           <div>
-            <Label htmlFor="m_levelupChance">Levelup Chance</Label>
+            <FieldLabel htmlFor="m_levelupChance" label="Levelup Chance" fieldKey="m_levelupChance" onSetDefault={handleSetDefault} />
             <Input
               id="m_levelupChance"
               name="m_levelupChance"
@@ -269,7 +267,7 @@ export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps)
           </div>
 
           <div>
-            <Label htmlFor="multiSpawn">Multi Spawn</Label>
+            <FieldLabel htmlFor="multiSpawn" label="Multi Spawn" fieldKey="multiSpawn" onSetDefault={handleSetDefault} />
             <Input
               id="multiSpawn"
               name="multiSpawn"
@@ -290,9 +288,13 @@ export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps)
               onChange={handleChange}
               className="h-4 w-4 rounded border-slate-300"
             />
-            <Label htmlFor="m_onGroundOnly" className="cursor-pointer">
-              On Ground Only
-            </Label>
+            <FieldLabel
+              htmlFor="m_onGroundOnly"
+              label="On Ground Only"
+              fieldKey="m_onGroundOnly"
+              onSetDefault={handleSetDefault}
+              labelClassName="cursor-pointer"
+            />
           </div>
 
           <div className="flex items-center gap-2">
@@ -304,9 +306,13 @@ export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps)
               onChange={handleChange}
               className="h-4 w-4 rounded border-slate-300"
             />
-            <Label htmlFor="m_setPatrolSpawnPoint" className="cursor-pointer">
-              Set Patrol Spawn Point
-            </Label>
+            <FieldLabel
+              htmlFor="m_setPatrolSpawnPoint"
+              label="Set Patrol Spawn Point"
+              fieldKey="m_setPatrolSpawnPoint"
+              onSetDefault={handleSetDefault}
+              labelClassName="cursor-pointer"
+            />
           </div>
 
           <div className="flex items-center gap-2">
@@ -318,9 +324,13 @@ export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps)
               onChange={handleChange}
               className="h-4 w-4 rounded border-slate-300"
             />
-            <Label htmlFor="mobTarget" className="cursor-pointer">
-              Mob Target
-            </Label>
+            <FieldLabel
+              htmlFor="mobTarget"
+              label="Mob Target"
+              fieldKey="mobTarget"
+              onSetDefault={handleSetDefault}
+              labelClassName="cursor-pointer"
+            />
           </div>
         </div>
       </CardContent>
