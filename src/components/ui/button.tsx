@@ -16,6 +16,7 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
         sky: "bg-sky-500 text-white hover:bg-sky-600 aria-expanded:bg-sky-600 aria-expanded:text-white",
         amber: "bg-amber-500 text-white hover:bg-amber-600 aria-expanded:bg-amber-600 aria-expanded:text-white",
+        lime: "bg-lime-500 text-white hover:bg-lime-600 aria-expanded:bg-lime-600 aria-expanded:text-white",
         ghost:
           "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
         destructive:
