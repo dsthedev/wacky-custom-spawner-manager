@@ -6,6 +6,7 @@ import { SpawnerList } from '@/components/SpawnerList';
 import { SpawnerEditor } from '@/components/SpawnerEditor';
 import { ProfileManager } from '@/components/ProfileManager';
 import { useSpawnerProfile } from '@/hooks/useSpawnerProfile';
+import { usePrefabData } from '@/hooks/usePrefabData';
 import { exportSpawnersAsYAML } from '@/utils/yaml';
 import type { SpawnerObject } from '@/types/spawner';
 import { Download } from 'lucide-react';
@@ -20,6 +21,8 @@ export function App() {
     updateProfile,
     removeProfile,
   } = useSpawnerProfile();
+
+  const { creatures, pieces, imageMap } = usePrefabData();
 
   const [spawners, setSpawners] = useState<SpawnerObject[]>(currentProfile?.spawners || []);
   const [editingSpawner, setEditingSpawner] = useState<{
@@ -157,6 +160,7 @@ export function App() {
                 onEdit={handleEditSpawner}
                 onDelete={handleDeleteSpawner}
                 onAdd={handleAddSpawner}
+                imageMap={imageMap}
               />
             ) : (
               <div className="rounded-lg border-2 border-dashed border-slate-300 p-12 text-center dark:border-slate-700">
@@ -177,6 +181,9 @@ export function App() {
             setIsEditing(false);
             setEditingSpawner(null);
           }}
+          creatures={creatures}
+          pieces={pieces}
+          imageMap={imageMap}
         />
       )}
     </div>

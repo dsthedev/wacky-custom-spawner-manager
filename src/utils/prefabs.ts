@@ -1,9 +1,10 @@
-import creaturesPieces from '@/assets/creatures-pieces.json';
+// Creature and piece lists are now loaded at runtime via usePrefabData hook
+// from public/creatures-pieces.json. These stubs kept for any legacy usage.
 
 export function getCreatures(): string[] {
-  return creaturesPieces.Creatures;
+  return [];
 }
 
 export function getPieces(): string[] {
-  return creaturesPieces.Pieces;
+  return [];
 }

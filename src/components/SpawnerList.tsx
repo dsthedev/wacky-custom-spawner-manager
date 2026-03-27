@@ -11,9 +11,10 @@ interface SpawnerListProps {
   onEdit: (spawner: SpawnerObject, index: number) => void;
   onDelete: (index: number) => void;
   onAdd: () => void;
+  imageMap?: Map<string, string>;
 }
 
-export function SpawnerList({ spawners, onEdit, onDelete, onAdd }: SpawnerListProps) {
+export function SpawnerList({ spawners, onEdit, onDelete, onAdd, imageMap }: SpawnerListProps) {
   const [expandedIndices, setExpandedIndices] = useState<Set<number>>(new Set());
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -83,7 +84,27 @@ export function SpawnerList({ spawners, onEdit, onDelete, onAdd }: SpawnerListPr
                           }`}
                         />
                         <div>
-                          <p className="font-semibold">{spawner.name}</p>
+                          <div className="flex items-center gap-2">
+                            {spawner.m_prefabName && imageMap && (
+                              <div className="flex gap-1">
+                                {spawner.m_prefabName
+                                  .split(',')
+                                  .map(p => p.trim())
+                                  .filter(Boolean)
+                                  .map(p => imageMap.get(p))
+                                  .filter((url): url is string => !!url)
+                                  .map((url, i) => (
+                                    <img
+                                      key={i}
+                                      src={url}
+                                      alt=""
+                                      className="h-10 w-10 rounded object-contain"
+                                    />
+                                  ))}
+                              </div>
+                            )}
+                            <p className="font-semibold">{spawner.name}</p>
+                          </div>
                           <div className="flex gap-2 pt-1">
                             {spawner.m_prefabName && (
                               <Badge variant="secondary" className="text-xs">

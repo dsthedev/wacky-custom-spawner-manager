@@ -5,16 +5,18 @@ import { Input } from '@/components/ui/input';
 import { Combobox } from '@/components/Combobox';
 import { FieldLabel } from '@/components/FieldLabel';
 import type { SpawnerObject } from '@/types/spawner';
-import { getCreatures, getPieces } from '@/utils/prefabs';
 import { X } from 'lucide-react';
 
 interface SpawnerEditorProps {
   spawner?: SpawnerObject;
   onSave: (spawner: SpawnerObject) => void;
   onCancel: () => void;
+  creatures?: string[];
+  pieces?: string[];
+  imageMap?: Map<string, string>;
 }
 
-export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps) {
+export function SpawnerEditor({ spawner, onSave, onCancel, creatures = [], pieces = [], imageMap }: SpawnerEditorProps) {
   const [formData, setFormData] = useState<SpawnerObject>(
     spawner || {
       name: '',
@@ -39,8 +41,7 @@ export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps)
     }
   );
 
-  const pieces = getPieces();
-  const creatures = getCreatures();
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
@@ -110,6 +111,7 @@ export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps)
                 value={formData.prefabToCopy || ''}
                 onChange={handlePrefabChange('prefabToCopy')}
                 placeholder="Select or search piece..."
+                imageMap={imageMap}
               />
             </div>
           </div>
@@ -128,6 +130,7 @@ export function SpawnerEditor({ spawner, onSave, onCancel }: SpawnerEditorProps)
                 value={formData.m_prefabName || ''}
                 onChange={handlePrefabChange('m_prefabName')}
                 placeholder="Select or search creature..."
+                imageMap={imageMap}
               />
             </div>
             <div>

@@ -1,7 +1,7 @@
 import { Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { HoverCardRoot, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
+import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
 import { SPAWNER_FIELD_META, type FieldType } from '@/components/spawner-field-meta';
 import { cn } from '@/lib/utils';
 
@@ -44,7 +44,7 @@ export function FieldLabel({
       <Label htmlFor={htmlFor} className={labelClassName}>
         {label}
       </Label>
-      <HoverCardRoot openDelay={200} closeDelay={150}>
+      <HoverCard openDelay={200} closeDelay={150}>
         <HoverCardTrigger asChild>
           <button
             type="button"
@@ -89,7 +89,7 @@ export function FieldLabel({
             </div>
           </div>
         </HoverCardContent>
-      </HoverCardRoot>
+      </HoverCard>
     </div>
   );
 }
