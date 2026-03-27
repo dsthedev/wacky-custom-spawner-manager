@@ -207,7 +207,7 @@ function SpawnerDetails({
           </section>
         )
       })}
-      {extraEntries.length > 0 && (
+      {extraEntries.length > 999 && (
         <section className="rounded border border-slate-200 bg-slate-50 p-2 dark:border-slate-700 dark:bg-slate-900/50">
           <h4 className="mb-1.5 text-[9px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
             Other
