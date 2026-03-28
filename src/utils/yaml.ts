@@ -1,6 +1,15 @@
 import YAML from 'js-yaml';
 import type { SpawnerObject } from '@/types/spawner';
 
+function sanitizeSpawnersForExport(spawners: SpawnerObject[]): SpawnerObject[] {
+  return spawners.map((spawner) => {
+    const { id: _internalId, ...exportableSpawner } = spawner as SpawnerObject & {
+      id?: unknown;
+    };
+    return exportableSpawner;
+  });
+}
+
 export function parseYAML(yamlContent: string): SpawnerObject[] {
   try {
     const parsed = YAML.load(yamlContent);
@@ -29,7 +38,9 @@ export function parseYAML(yamlContent: string): SpawnerObject[] {
 }
 
 export function spawnersToYAML(spawners: SpawnerObject[]): string {
-  return YAML.dump({ spawners }, {
+  const sanitizedSpawners = sanitizeSpawnersForExport(spawners);
+
+  return YAML.dump({ spawners: sanitizedSpawners }, {
     indent: 2,
     lineWidth: -1,
   });
